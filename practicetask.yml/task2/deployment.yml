@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safari
+  namespace: project-tiger
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd:2.4.41-alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: "/tmp/safari-data"
+            name: nazik-pd
+      volumes:
+        - name: nazik-pd
+          persistentVolumeClaim:
+            claimName: safari-pvc
